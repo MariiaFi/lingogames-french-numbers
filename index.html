@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LingoGames – French Numbers</title>
+
+<style>
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --primary: #2b6cff;
+  --success: #2ecc71;
+  --error: #e74c3c;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: #1c1c1c;
+}
+
+.app {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-size: 22px;
+  margin: 8px 0;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+  text-align: center;
+}
+
+.number {
+  font-size: 56px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+button {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #eef2ff;
+  color: #2b6cff;
+}
+
+.feedback {
+  margin-top: 14px;
+  font-size: 16px;
+  font-weight: 600;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+  <div class="header">
+    <h1>French numbers (0–10)</h1>
+    <p>Choose the correct word</p>
+  </div>
+
+  <div class="card">
+    <div class="number" id="number">0</div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+</div>
+
+<script>
+const data = [
+  {n:0, w:"zéro"},
+  {n:1, w:"un"},
+  {n:2, w:"deux"},
+  {n:3, w:"trois"},
+  {n:4, w:"quatre"},
+  {n:5, w:"cinq"},
+  {n:6, w:"six"},
+  {n:7, w:"sept"},
+  {n:8, w:"huit"},
+  {n:9, w:"neuf"},
+  {n:10, w:"dix"}
+];
+
+let current;
+
+function shuffle(arr){
+  return arr.sort(() => Math.random() - 0.5);
+}
+
+function next(){
+  document.getElementById("feedback").textContent = "";
+  current = data[Math.floor(Math.random()*data.length)];
+  document.getElementById("number").textContent = current.n;
+
+  const options = shuffle([
+    current.w,
+    ...shuffle(data.filter(x=>x.w!==current.w)).slice(0,3).map(x=>x.w)
+  ]);
+
+  const box = document.getElementById("answers");
+  box.innerHTML = "";
+
+  options.forEach(w=>{
+    const b = document.createElement("button");
+    b.textContent = w;
+    b.onclick = () => check(w);
+    box.appendChild(b);
+  });
+}
+
+function check(w){
+  const f = document.getElementById("feedback");
+  if(w === current.w){
+    f.textContent = "Correct ✔";
+    f.style.color = "var(--success)";
+  } else {
+    f.textContent = "Wrong ✖  " + current.w;
+    f.style.color = "var(--error)";
+  }
+  setTimeout(next, 900);
+}
+
+next();
+</script>
+</body>
+</html>
